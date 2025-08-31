@@ -1,0 +1,10 @@
+{
+  "tasks": {
+    "dev": "deno run --allow-net --allow-read --watch main.ts",
+    "build": "deno bundle --platform browser --minify src/js/main.ts --output src/dist/js/main.js && deno run --allow-read --allow-env --allow-ffi --allow-write build.ts",
+    "start": "deno task build && deno run --allow-net --allow-read server.ts"
+  },
+  "imports": {
+    "lightningcss": "npm:lightningcss@^1.30.1"
+  }
+}

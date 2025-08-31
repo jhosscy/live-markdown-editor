@@ -1,0 +1,175 @@
+@font-face {
+  font-family: InterVariable;
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/InterVariable.woff2') format('woff2');
+}
+
+/* ===== Tokens y paleta (LIGHT por defecto) ===== */
+:root {
+  /* Fondos / superficies */
+  --color-bg: oklch(98% 0.02 255);
+  --color-surface: oklch(100% 0 0);
+  --color-border: oklch(85% 0.02 250);
+
+  /* Texto */
+  --color-text: oklch(20% 0.03 250);
+  --color-text-muted: oklch(46% 0.02 250);
+
+  /* Primario (naranja) */
+  --color-primary: oklch(58% 0.23 45);
+  --color-primary-hover: oklch(52% 0.22 45);
+  --color-primary-weak: oklch(72% 0.08 45);
+
+  /* Focus */
+  --focus-ring: oklch(62% 0.15 45);
+
+  /* Tipografías */
+  --font-family-primary: InterVariable, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Arial, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+
+  /* Sombras */
+  --panel-shadow: 0 6px 24px oklch(0% 0 0 / 0.08), 0 1px 2px oklch(0% 0 0 / 0.06);
+  --floating-shadow: 0 4px 16px oklch(0% 0 0 / 0.12);
+}
+
+/* ===== Dark preferido del sistema (si NO hay data-theme manual) ===== */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    --color-bg: oklch(18% 0.02 250);
+    --color-surface: oklch(22% 0.02 250);
+    --color-border: oklch(35% 0.02 250);
+
+    --color-text: oklch(95% 0.02 245);
+    --color-text-muted: oklch(75% 0.02 245);
+
+    --color-primary: oklch(70% 0.20 45);
+    --color-primary-hover: oklch(64% 0.19 45);
+    --color-primary-weak: oklch(40% 0.07 45);
+
+    --focus-ring: oklch(85% 0.08 45);
+  }
+}
+
+/* ===== Dark forzado por atributo ===== */
+:root[data-theme="dark"] {
+  --color-bg: oklch(18% 0.02 250);
+  --color-surface: oklch(22% 0.02 250);
+  --color-border: oklch(35% 0.02 250);
+
+  --color-text: oklch(95% 0.02 245);
+  --color-text-muted: oklch(75% 0.02 245);
+
+  --color-primary: oklch(70% 0.20 45);
+  --color-primary-hover: oklch(64% 0.19 45);
+  --color-primary-weak: oklch(40% 0.07 45);
+
+  --focus-ring: oklch(85% 0.08 45);
+}
+
+/* ===== Reset / Base global ===== */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+}
+
+html, body { height: 100%; }
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-family-primary);
+  line-height: 1.6;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@supports selector(::-webkit-scrollbar) {
+  *::-webkit-scrollbar {
+    width: .75rem;
+    height: .75rem;
+  }
+  *::-webkit-scrollbar-thumb {
+    background: var(--color-border);
+    border-radius: 999px;
+    border: 2px solid var(--color-surface);
+  }
+  *::-webkit-scrollbar-track {
+    background: var(--color-bg);
+  }
+}
+
+* {
+  scrollbar-color: var(--color-border) var(--color-bg);
+  scrollbar-width: thin;
+}
+
+/* ===== Layout 404 (centrado total) ===== */
+main {
+  display: flex;
+  align-items: center;      /* centrado vertical */
+  justify-content: center;  /* centrado horizontal */
+  height: 100dvh;
+  padding: 2rem;
+}
+
+article {
+  display: grid;
+  row-gap: 1rem;
+  background: var(--color-surface);
+  border-radius: 1rem;
+  box-shadow: var(--panel-shadow);
+  text-align: center;
+  width: min(100%, 42rem);
+  padding: clamp(1.25rem, 2vw + 1rem, 2rem);
+}
+
+.code {
+  display: block;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  font-size: clamp(3rem, 10vw, 6rem);
+  line-height: 1;
+  color: var(--color-text-muted);
+  user-select: none;
+}
+
+.icon {
+  color: var(--color-primary-weak);
+}
+
+h1 {
+  font-size: clamp(1.25rem, 1.2vw + 1rem, 1.75rem);
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.cta {
+  display: inline-block;
+  border-radius: .75rem;
+  border: 1px solid var(--color-border);
+  background: var(--color-primary);
+  color: var(--color-surface);
+  text-decoration: none;
+  font-weight: 600;
+  box-shadow: var(--floating-shadow);
+  padding: .625rem 1rem;
+  transition: transform .15s ease, background-color .2s ease, box-shadow .2s ease;
+}
+.cta:hover {
+  background: var(--color-primary-hover);
+  transform: translateY(-1px);
+}
+.cta:active { transform: translateY(0); }
+.cta:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 3px;
+}
+
+/* Reduce motion respetuoso */
+@media (prefers-reduced-motion: reduce) {
+  .cta { transition: none; }
+}

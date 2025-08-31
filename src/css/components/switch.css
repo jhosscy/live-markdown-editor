@@ -1,0 +1,71 @@
+.switch {
+  display: flex;
+  align-items: center;
+  column-gap: .5rem;
+  padding: .75rem max(1.125rem, env(safe-area-inset-right)) .75rem max(1.125rem, env(safe-area-inset-left));
+}
+
+.switch--preview {
+  justify-self: end;
+  position: fixed;
+  top: 0;
+  z-index: 10;
+}
+
+.switch--theme {
+}
+
+.switch__icon {
+  transition: color .25s ease;
+  pointer-events: none; /* no estorba el click en el botón */
+}
+
+/* Si el switch está activado, reforzamos el color del icono al primario */
+.switch:has(.switch__button[aria-checked="true"]) .switch__icon {
+  color: var(--switch-primary);
+}
+
+.switch__button {
+  position: relative;
+  width: 2.75rem;
+  height: 1.5rem;
+  background-color: var(--switch-bg);
+  box-shadow:
+    0 .05rem .25rem var(--switch-thumb-shadow) inset,
+    var(--floating-shadow);
+  border-radius: 2rem;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: background-color 0.25s ease;
+  overflow: hidden;
+  outline: none;
+}
+
+.switch__button:focus-visible {
+  box-shadow:
+    0 0 0 .125rem var(--switch-focus-inner),
+    0 0 0 .25rem var(--switch-primary);
+}
+
+.switch__button[aria-checked="true"] {
+  background-color: var(--switch-primary);
+}
+
+.switch__thumb {
+  position: absolute;
+  top: .125rem;
+  left: .125rem;
+  width: 1.25rem;
+  height: 1.25rem;
+  background-color: var(--switch-thumb);
+  border-radius: 50%;
+  box-shadow: 0 .125rem .1875rem var(--switch-thumb-shadow);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateX(0);
+  will-change: transform;
+}
+
+.switch__button[aria-checked="true"] .switch__thumb {
+  transform: translateX(1.25rem);
+}

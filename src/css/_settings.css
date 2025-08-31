@@ -1,0 +1,114 @@
+/* cyrillic-ext */
+@font-face {
+  font-family: InterVariable;
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/InterVariable.woff2') format('woff2');
+}
+
+/* cyrillic-ext */
+@font-face {
+  font-family: 'STIX Two Text';
+  font-style: italic;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url(../fonts/STIX-Two-Text.woff2) format('woff2');
+}
+
+:root {
+  /* Fondos y superficies (ligera separación entre fondo y panel) */
+  --color-bg: oklch(98% 0.02 255);      /* casi blanco, frío */
+  --color-surface: oklch(100% 0 0);     /* blanco puro */
+  --color-border: oklch(85% 0.02 250);  /* gris claro para líneas internas */
+
+  /* Texto (oscuros y legibles) */
+  --color-text: oklch(20% 0.03 250);
+  --color-text-muted: oklch(46% 0.02 250);
+
+  /* Primario naranja (más oscuro para contraste en fondo claro) */
+  --color-primary: oklch(58% 0.23 45);
+  --color-primary-hover: oklch(52% 0.22 45);
+  --color-primary-weak: oklch(72% 0.08 45);
+
+  /* Enfoque accesible */
+  --focus-ring: oklch(62% 0.15 45);
+
+  /* Switch en claro: pista tenue + pulgar blanco */
+  --switch-primary: var(--color-primary);
+  --switch-bg: oklch(92% 0.01 250);   /* leve gris sobre fondo blanco */
+  --switch-thumb: oklch(100% 0 0);
+  --switch-thumb-shadow: oklch(0% 0 0 / .18);
+  --switch-focus-inner: var(--focus-ring);
+
+  /* Tipografías */
+  --font-family-primary: InterVariable, system-ui;
+  --font-family-science: 'STIX Two Text', serif;
+
+  /* Sombras para contraste SIN bordes */
+  --panel-shadow: 0 6px 24px oklch(0% 0 0 / 0.08), 0 1px 2px oklch(0% 0 0 / 0.06);
+  --floating-shadow: 0 4px 16px oklch(0% 0 0 / 0.12);
+
+  .switch__icon--dark { display: inline; }
+  .switch__icon--light { display: none; }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    /* === PALETA (OKLCH) — MODO OSCURO (por defecto) === */
+    --color-bg: oklch(18% 0.02 250);
+    --color-surface: oklch(22% 0.02 250);
+    --color-border: oklch(35% 0.02 250);
+
+    /* Texto */
+    --color-text: oklch(95% 0.02 245);
+    --color-text-muted: oklch(75% 0.02 245);
+
+    /* Primario: NARANJA (accesible en dark) */
+    --color-primary: oklch(70% 0.20 45);
+    --color-primary-hover: oklch(64% 0.19 45);
+    --color-primary-weak: oklch(40% 0.07 45);
+
+    /* Focus ring */
+    --focus-ring: oklch(85% 0.08 45);
+
+    /* Mapeo para el switch (BEM existente) */
+    --switch-primary: var(--color-primary);
+    --switch-bg: oklch(30% 0.02 250);
+    --switch-thumb: oklch(98% 0 0);
+    --switch-thumb-shadow: oklch(0% 0 0 / .45);
+    --switch-focus-inner: var(--focus-ring);
+
+    .switch__icon--dark { display: none; }
+    .switch__icon--light { display: inline; }
+  }
+}
+
+:root[data-theme="dark"] {
+  /* === PALETA (OKLCH) — MODO OSCURO (por defecto) === */
+  --color-bg: oklch(18% 0.02 250);
+  --color-surface: oklch(22% 0.02 250);
+  --color-border: oklch(35% 0.02 250);
+
+  /* Texto */
+  --color-text: oklch(95% 0.02 245);
+  --color-text-muted: oklch(75% 0.02 245);
+
+  /* Primario: NARANJA (accesible en dark) */
+  --color-primary: oklch(70% 0.20 45);
+  --color-primary-hover: oklch(64% 0.19 45);
+  --color-primary-weak: oklch(40% 0.07 45);
+
+  /* Focus ring */
+  --focus-ring: oklch(85% 0.08 45);
+
+  /* Mapeo para el switch (BEM existente) */
+  --switch-primary: var(--color-primary);
+  --switch-bg: oklch(30% 0.02 250);
+  --switch-thumb: oklch(98% 0 0);
+  --switch-thumb-shadow: oklch(0% 0 0 / .45);
+  --switch-focus-inner: var(--focus-ring);
+
+  .switch__icon--dark { display: none; }
+  .switch__icon--light { display: inline; }
+}
