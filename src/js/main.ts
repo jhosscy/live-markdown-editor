@@ -25,7 +25,7 @@ if (themeSaved) docEl.setAttribute('data-theme', themeSaved);
 let rawMarkdown = '';
 
 switchPreview.addEventListener('click', async () => {
-  await loadCSSOnce('static/css/katex.min.css')
+  await loadCSSOnce('static/css/katex.css');
   const isChecked = switchPreview.getAttribute('aria-checked') === 'true';
   switchPreview.setAttribute('aria-checked', !isChecked);
   rawMarkdown = !isChecked ? editor.innerText : rawMarkdown;

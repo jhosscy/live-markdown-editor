@@ -1,6 +1,6 @@
 import { bundleAsync } from 'lightningcss';
 
-const entrypoints = ['styles.css', 'standalone.css'];
+const entrypoints = ['styles.css', 'standalone.css', 'katex.css'];
 const outDir = 'src/dist/css';
 
 await Promise.all(entrypoints.map(async (entry) => {
