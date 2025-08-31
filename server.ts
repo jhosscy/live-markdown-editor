@@ -4,6 +4,10 @@ import { extname } from "jsr:@std/path/extname";
 import { eTag, ifNoneMatch } from "jsr:@std/http/etag";
 import createHeaders from './headers.ts';
 
+const EXT_RAWS = new Set([
+  ".png", ".jpg", ".jpeg", ".webp", ".gif", ".svg", ".avif",
+  ".ico", ".bmp"
+]);
 const EXT_FONTS = new Set([".ttf", ".woff2"]);
 
 Deno.serve(async (req: Request) => {
@@ -17,7 +21,7 @@ Deno.serve(async (req: Request) => {
   const patternStatic = new URLPattern({ pathname: "/static/**" });
   if (patternStatic.test(req.url) && req.method === 'GET') {
     const ext = extname(pathname);
-    const baseDir = EXT_FONTS.has(ext) ? 'src' : 'src/dist';
+    const baseDir = (EXT_FONTS.has(ext) || EXT_RAWS.has(ext)) ? 'src' : 'src/dist';
     const fsPath = pathname.replace('/static', baseDir);
     const file = await Deno.readFile(fsPath);
     const computedEtag = await eTag(file);
