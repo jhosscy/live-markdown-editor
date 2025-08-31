@@ -1,4 +1,3 @@
-/* cyrillic-ext */
 @font-face {
   font-family: InterVariable;
   font-style: normal;
@@ -7,13 +6,20 @@
   src: url('../fonts/InterVariable.woff2') format('woff2');
 }
 
-/* cyrillic-ext */
 @font-face {
   font-family: 'STIX Two Text';
   font-style: italic;
   font-weight: 400 700;
   font-display: swap;
   src: url(../fonts/STIX-Two-Text.woff2) format('woff2');
+}
+
+@font-face {
+  font-family: JetBrainsVariable;
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('../fonts/JetBrainsMonoVariable.woff2') format('woff2');
 }
 
 :root {
@@ -44,6 +50,7 @@
   /* Tipografías */
   --font-family-primary: InterVariable, system-ui;
   --font-family-science: 'STIX Two Text', serif;
+  --font-family-code: JetBrainsVariable, monospace;
 
   /* Sombras para contraste SIN bordes */
   --panel-shadow: 0 6px 24px oklch(0% 0 0 / 0.08), 0 1px 2px oklch(0% 0 0 / 0.06);
