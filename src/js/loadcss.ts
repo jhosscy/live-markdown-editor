@@ -1,21 +1,21 @@
-let katexCssPromise: Promise<void> | null = null;
+const cssPromises: Record<string, Promise<void>> = {};
 
-export function loadCSSOnce(href: string, id = 'katex-css'): Promise<void> {
+export function loadCSSOnce(href: string, id: string): Promise<void> {
   if (document.getElementById(id)) return Promise.resolve();
-  if (katexCssPromise) return katexCssPromise;
+  if (cssPromises[id]) return cssPromises[id];
 
-  katexCssPromise = new Promise((resolve) => {
+  cssPromises[id] = new Promise((resolve) => {
     const link = document.createElement('link');
     link.rel = 'stylesheet';
-    link.href = href;        // <-- tu ruta a katex.min.css
+    link.href = href;
     link.id = id;
     link.onload = () => resolve();
     link.onerror = () => {
-      console.warn('[KaTeX] No se pudo cargar el CSS, continúo sin estilos.');
-      resolve(); // no bloquees el preview si falla
+      console.warn(`[CSS Loader] No se pudo cargar el CSS (${href}), continúo sin estilos.`);
+      resolve();
     };
     document.head.appendChild(link);
   });
 
-  return katexCssPromise;
-};
+  return cssPromises[id];
+}

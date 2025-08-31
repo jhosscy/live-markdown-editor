@@ -1,7 +1,51 @@
-import { marked } from 'npm:marked';
+import { Marked, Renderer } from 'npm:marked';
+import { markedHighlight } from 'npm:marked-highlight';
+import hljs from 'npm:highlight.js';
 import 'npm:katex/contrib/mhchem';
 import markedKatex from 'npm:marked-katex-extension';
 import { loadCSSOnce } from './loadcss.ts';
+
+const renderer = new Renderer();
+
+renderer.code = (code) => {
+  return code.text;
+}
+
+const marked = new Marked(
+  markedHighlight({
+    emptyLangClass: 'hljs',
+    langPrefix: 'hljs language-',
+    highlight(code, lang) {
+      const language = hljs.getLanguage(lang) ? lang : 'plaintext';
+      try {
+        const highlightedCode = hljs.highlight(code, { language }).value;
+        return `
+          <div class="code-block-container">
+            <div class="code-header">
+              <span class="code-language">${language}</span>
+            </div>
+            <pre><code class="hljs language-${language}">${highlightedCode}</code></pre>
+          </div>
+        `
+      } catch (error) {
+        return `
+          <div class="code-block-container">
+            <div class="code-header">
+              <span class="code-language">${language}</span>
+            </div>
+            <pre><code class="hljs language-${language}">${code}</code></pre>
+          </div>
+        `;
+      }
+    }
+  }),
+  {
+    renderer: renderer,
+    gfm: true,
+    pedantic: false,
+    breaks: true,
+  }
+);
 
 marked.use(markedKatex({
   nonStandard: true,
@@ -25,7 +69,8 @@ if (themeSaved) docEl.setAttribute('data-theme', themeSaved);
 let rawMarkdown = '';
 
 switchPreview.addEventListener('click', async () => {
-  await loadCSSOnce('static/css/katex.css');
+  await loadCSSOnce('static/css/katex.css', 'katex-css');
+  await loadCSSOnce('static/css/github-dark.css', 'github-dark');
   const isChecked = switchPreview.getAttribute('aria-checked') === 'true';
   switchPreview.setAttribute('aria-checked', !isChecked);
   rawMarkdown = !isChecked ? editor.innerText : rawMarkdown;

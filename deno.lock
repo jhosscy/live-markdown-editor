@@ -12,8 +12,10 @@
     "jsr:@std/path@*": "1.0.8",
     "jsr:@std/path@^1.0.8": "1.0.8",
     "jsr:@std/streams@^1.0.9": "1.0.9",
+    "npm:highlight.js@*": "11.11.1",
     "npm:katex@*": "0.16.21",
     "npm:lightningcss@^1.30.1": "1.30.1",
+    "npm:marked-highlight@*": "2.2.2_marked@16.2.1",
     "npm:marked-katex-extension@*": "5.1.5_katex@0.16.21_marked@16.2.1",
     "npm:marked@*": "16.2.1"
   },
@@ -62,6 +64,9 @@
     },
     "detect-libc@2.0.4": {
       "integrity": "sha512-3UDv+G9CsCKO1WKMGw9fwq/SWJYbI0c5Y7LU1AXYoDdbhE2AHQ6N6Nb34sG8Fj7T5APy8qXDCKuuIHd1BR0tVA=="
+    },
+    "highlight.js@11.11.1": {
+      "integrity": "sha512-Xwwo44whKBVCYoliBQwaPvtd/2tYFkRQtXDWj1nackaV2JPXx3L0+Jvd8/qCJ2p+ML0/XVkJ2q+Mr+UVdpJK5w=="
     },
     "katex@0.16.21": {
       "integrity": "sha512-XvqR7FgOHtWupfMiigNzmh+MgUVmDGU2kXZm899ZkPfcuoPuFxyHmXsgATDpFZDAXCI8tvinaVcDo8PIIJSo4A==",
@@ -136,6 +141,12 @@
         "lightningcss-linux-x64-musl",
         "lightningcss-win32-arm64-msvc",
         "lightningcss-win32-x64-msvc"
+      ]
+    },
+    "marked-highlight@2.2.2_marked@16.2.1": {
+      "integrity": "sha512-KlHOP31DatbtPPXPaI8nx1KTrG3EW0Z5zewCwpUj65swbtKOTStteK3sNAjBqV75Pgo3fNEVNHeptg18mDuWgw==",
+      "dependencies": [
+        "marked"
       ]
     },
     "marked-katex-extension@5.1.5_katex@0.16.21_marked@16.2.1": {
