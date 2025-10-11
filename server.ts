@@ -10,7 +10,7 @@ const EXT_RAWS = new Set([
 ]);
 const EXT_FONTS = new Set([".ttf", ".woff2"]);
 
-Deno.serve(async (req: Request) => {
+Deno.serve({ port: 12000, hostname: "0.0.0.0" }, async (req: Request) => {
   const { pathname } = new URL(req.url);
   const ifNone = req.headers.get('if-none-match');
   if (pathname === '/' && req.method === 'GET') {

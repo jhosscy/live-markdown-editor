@@ -56,6 +56,7 @@ marked.use(markedKatex({
 const docEl = document.documentElement;
 const switchPreview = document.querySelector<HTMLButtonElement>('.switch--preview > .switch__button');
 const switchTheme = document.querySelector<HTMLButtonElement>('.switch--theme > .switch__button');
+const pasteButton = document.querySelector<HTMLButtonElement>('.paste-button');
 const editor = document.querySelector<HTMLDivElement>('.markdown-editor');
 
 const themeSaved: string | null = localStorage.getItem('theme');
@@ -95,4 +96,64 @@ switchTheme.addEventListener('click', () => {
   localStorage.setItem('theme', isChecked ? 'light' : 'dark');
   switchTheme.setAttribute('aria-checked', !isChecked);
   docEl.setAttribute('data-theme', isChecked ? 'light' : 'dark');
+});
+
+// Paste button functionality
+pasteButton.addEventListener('click', async () => {
+  try {
+    // Check if clipboard API is available
+    if (!navigator.clipboard) {
+      throw new Error('Clipboard API no disponible');
+    }
+
+    // Check if we're in preview mode
+    const isPreviewMode = switchPreview.getAttribute('aria-checked') === 'true';
+    
+    if (isPreviewMode) {
+      // If in preview mode, show a message or do nothing
+      console.log('No se puede pegar en modo vista previa');
+      return;
+    }
+
+    // Read text from clipboard
+    const clipboardText = await navigator.clipboard.readText();
+    
+    if (clipboardText) {
+      // Get current cursor position or selection
+      const selection = window.getSelection();
+      
+      if (selection && selection.rangeCount > 0) {
+        // If there's a selection, replace it
+        const range = selection.getRangeAt(0);
+        range.deleteContents();
+        range.insertNode(document.createTextNode(clipboardText));
+        
+        // Move cursor to end of inserted text
+        range.setStartAfter(range.endContainer);
+        range.collapse(true);
+        selection.removeAllRanges();
+        selection.addRange(range);
+      } else {
+        // If no selection, append to the end
+        const currentContent = editor.textContent || '';
+        editor.textContent = currentContent + clipboardText;
+      }
+      
+      // Focus the editor
+      editor.focus();
+      
+      // Update rawMarkdown if needed
+      rawMarkdown = editor.textContent || '';
+    }
+  } catch (error) {
+    console.error('Error al pegar desde el portapapeles:', error);
+    
+    // Fallback: show a message to the user
+    const originalTitle = pasteButton.title;
+    pasteButton.title = 'Error: No se pudo acceder al portapapeles';
+    
+    setTimeout(() => {
+      pasteButton.title = originalTitle;
+    }, 2000);
+  }
 });

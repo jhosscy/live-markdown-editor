@@ -1,0 +1,66 @@
+.controls-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  padding: 0 max(1.125rem, env(safe-area-inset-right)) 0 max(1.125rem, env(safe-area-inset-left));
+  background-color: var(--color-bg);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.paste-button-container {
+  display: flex;
+  align-items: center;
+  padding: .75rem 0;
+}
+
+.paste-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: .5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+.paste-button:hover {
+  background-color: var(--color-border);
+  border-color: var(--color-text);
+}
+
+.paste-button:focus-visible {
+  box-shadow: 0 0 0 .125rem var(--color-bg), 0 0 0 .25rem var(--color-primary);
+}
+
+.paste-button:active {
+  transform: scale(0.95);
+}
+
+.paste-button__icon {
+  color: var(--color-text);
+  transition: color 0.2s ease;
+}
+
+.paste-button:hover .paste-button__icon {
+  color: var(--color-primary);
+}
+
+/* Adjust switch positioning since they're now in a container */
+.switch--preview {
+  position: static;
+  justify-self: auto;
+}
+
+.switch--theme {
+  margin-left: auto;
+  margin-right: 1rem;
+}

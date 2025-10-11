@@ -20,6 +20,7 @@ section {
   grid-template-rows: auto 1fr;
   width: min(100%, 92rem);
   max-width: 75ch;
+  padding-top: 4rem; /* Space for fixed controls */
 }
 
 @supports selector(::-webkit-scrollbar) {
