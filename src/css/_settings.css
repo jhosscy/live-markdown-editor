@@ -61,25 +61,20 @@
 }
 
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme]) {
-    /* === PALETA (OKLCH) — MODO OSCURO (por defecto) === */
+  :root:is(:not([data-theme]), [data-theme="dark"]) {
     --color-bg: oklch(18% 0.02 250);
     --color-surface: oklch(22% 0.02 250);
     --color-border: oklch(35% 0.02 250);
 
-    /* Texto */
     --color-text: oklch(95% 0.02 245);
     --color-text-muted: oklch(75% 0.02 245);
 
-    /* Primario: NARANJA (accesible en dark) */
     --color-primary: oklch(70% 0.20 45);
     --color-primary-hover: oklch(64% 0.19 45);
     --color-primary-weak: oklch(40% 0.07 45);
 
-    /* Focus ring */
     --focus-ring: oklch(85% 0.08 45);
 
-    /* Mapeo para el switch (BEM existente) */
     --switch-primary: var(--color-primary);
     --switch-bg: oklch(30% 0.02 250);
     --switch-thumb: oklch(98% 0 0);
@@ -92,24 +87,19 @@
 }
 
 :root[data-theme="dark"] {
-  /* === PALETA (OKLCH) — MODO OSCURO (por defecto) === */
   --color-bg: oklch(18% 0.02 250);
   --color-surface: oklch(22% 0.02 250);
   --color-border: oklch(35% 0.02 250);
 
-  /* Texto */
   --color-text: oklch(95% 0.02 245);
   --color-text-muted: oklch(75% 0.02 245);
 
-  /* Primario: NARANJA (accesible en dark) */
   --color-primary: oklch(70% 0.20 45);
   --color-primary-hover: oklch(64% 0.19 45);
   --color-primary-weak: oklch(40% 0.07 45);
 
-  /* Focus ring */
   --focus-ring: oklch(85% 0.08 45);
 
-  /* Mapeo para el switch (BEM existente) */
   --switch-primary: var(--color-primary);
   --switch-bg: oklch(30% 0.02 250);
   --switch-thumb: oklch(98% 0 0);
