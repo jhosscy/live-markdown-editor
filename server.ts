@@ -1,5 +1,3 @@
-//import { serveFile } from 'jsr:@std/http/file-server';
-//return serveFile(req, 'index.html');
 import { extname } from "jsr:@std/path/extname";
 import { eTag, ifNoneMatch } from "jsr:@std/http/etag";
 import createHeaders from './headers.ts';
