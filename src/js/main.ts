@@ -92,7 +92,20 @@ switchPreview.addEventListener('click', async () => {
     editor.classList.add('markdown-editor--preview');
     editor.classList.remove('markdown-editor--editing');
     editor.innerHTML = marked.parse(rawMarkdown);
-    await mermaid.run();
+
+    // FIX 1: Pasar explícitamente los nodos a mermaid.run() para controlar el scope
+    // y evitar que mermaid intente re-procesar elementos de ejecuciones anteriores
+    const mermaidNodes = editor.querySelectorAll<HTMLElement>('.mermaid');
+    if (mermaidNodes.length > 0) {
+      await mermaid.run({ nodes: Array.from(mermaidNodes) });
+    }
+
+    // FIX 2: Esperar a que el DOM se estabilice completamente.
+    // mermaid.run() con muchos diagramas usa procesamiento en batch internamente
+    // y algunos SVGs pueden no estar insertados aún en el DOM cuando la promesa se resuelve.
+    // Doble requestAnimationFrame asegura que el browser haya completado todos los repaints.
+    await waitForDomStabilization();
+
     initMermaidContainers();
   } else {
     editor.contentEditable = 'true';
@@ -102,19 +115,51 @@ switchPreview.addEventListener('click', async () => {
   }
 });
 
+// --- DOM stabilization helper ---
+
+function waitForDomStabilization(): Promise<void> {
+  return new Promise<void>((resolve) => {
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        // Un microtask adicional para asegurar que cualquier
+        // promesa interna de mermaid se haya resuelto
+        queueMicrotask(() => {
+          resolve();
+        });
+      });
+    });
+  });
+}
+
 // --- Mermaid containers ---
 
 function initMermaidContainers(): void {
-  editor.querySelectorAll('pre.mermaid').forEach((pre) => {
-    const svg = pre.querySelector('svg');
+  // FIX 3: Usar un selector más robusto que no dependa del tag <pre>.
+  // mermaid.run() puede transformar <pre class="mermaid"> en <div> u otro elemento.
+  // Buscamos cualquier elemento .mermaid que contenga un SVG.
+  // También excluimos los que ya fueron procesados (dentro de un mermaid-zoom-container).
+  const processed = new WeakSet<Element>();
+
+  // Marcar los que ya tienen controles (para el caso de re-ejecución)
+  editor.querySelectorAll('.mermaid-zoom-container').forEach((c) => processed.add(c));
+
+  // FIX 4: Buscar TODOS los SVGs generados por mermaid dentro del editor,
+  // en lugar de depender de que estén dentro de un <pre.mermaid> específico.
+  const mermaidElements = editor.querySelectorAll<HTMLElement>('.mermaid');
+
+  mermaidElements.forEach((el) => {
+    // Saltar si ya está dentro de un zoom container (ya procesado)
+    if (el.closest('.mermaid-zoom-container')) return;
+
+    const svg = el.querySelector('svg');
     if (!svg) return;
 
     const container = document.createElement('div');
     container.className = 'mermaid-zoom-container';
 
-    pre.parentNode?.insertBefore(container, pre);
+    el.parentNode?.insertBefore(container, el);
     container.appendChild(svg);
-    pre.remove();
+    el.remove();
 
     const panZoomInstance = svgPanZoom(svg as SVGSVGElement, {
       zoomEnabled: true,
@@ -144,6 +189,21 @@ function initMermaidContainers(): void {
       }
     });
   });
+
+  // FIX 5: Verificar que TODOS los bloques mermaid fueron procesados.
+  // Si algún SVG aún no estaba listo (race condition residual), reintentar.
+  const remaining = Array.from(editor.querySelectorAll('.mermaid')).filter(
+    (el) => !el.closest('.mermaid-zoom-container') && el.querySelector('svg')
+  );
+
+  if (remaining.length > 0) {
+    console.warn(`[mermaid] ${remaining.length} bloque(s) pendientes, reintentando...`);
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        initMermaidContainers();
+      });
+    });
+  }
 }
 
 // --- Fullscreen ---
