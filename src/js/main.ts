@@ -94,10 +94,28 @@ switchPreview.addEventListener('click', async () => {
     editor.innerHTML = marked.parse(rawMarkdown);
 
     // FIX 1: Pasar explícitamente los nodos a mermaid.run() para controlar el scope
-    // y evitar que mermaid intente re-procesar elementos de ejecuciones anteriores
+    // y evitar que mermaid intente re-procesar elementos de ejecuciones anteriores.
+    //
+    // FIX 6: Usar `suppressErrors: true` y envolver en try/catch.
+    // mermaid.run() acumula errores de CADA diagrama y al final lanza el primero
+    // si hubo alguno. Con muchos bloques basta con que UNO falle (sintaxis,
+    // timeout, límite del navegador, etc.) para que la promesa rechace y se
+    // aborten los `await` siguientes — perdiendo los controles de TODOS los
+    // diagramas, incluso los que SÍ se renderizaron bien.
+    // Documentado oficialmente:
+    // https://mermaid-js-mermaid.mintlify.app/advanced/error-handling#using-suppresserrors-in-run
     const mermaidNodes = editor.querySelectorAll<HTMLElement>('.mermaid');
     if (mermaidNodes.length > 0) {
-      await mermaid.run({ nodes: Array.from(mermaidNodes) });
+      try {
+        await mermaid.run({
+          nodes: Array.from(mermaidNodes),
+          suppressErrors: true,
+        });
+      } catch (e) {
+        // Con suppressErrors:true mermaid no debería lanzar, pero si lo hace
+        // (ej. error de configuración) no queremos romper el resto del flujo.
+        console.error('[mermaid] error inesperado en mermaid.run:', e);
+      }
     }
 
     // FIX 2: Esperar a que el DOM se estabilice completamente.
@@ -192,8 +210,13 @@ function initMermaidContainers(): void {
 
   // FIX 5: Verificar que TODOS los bloques mermaid fueron procesados.
   // Si algún SVG aún no estaba listo (race condition residual), reintentar.
-  const remaining = Array.from(editor.querySelectorAll('.mermaid')).filter(
-    (el) => !el.closest('.mermaid-zoom-container') && el.querySelector('svg')
+  //
+  // FIX 7: No exigir `el.querySelector('svg')` en el filtro. Un diagrama que
+  // falló al renderizar (o que aún no terminó) no tendrá SVG, y también necesita
+  // ser reintentado / envuelto para mostrarle al usuario el feedback apropiado.
+  // El `if (!svg) return;` interno ya maneja los que aún no tienen SVG.
+  const remaining = Array.from(editor.querySelectorAll<HTMLElement>('.mermaid')).filter(
+    (el) => !el.closest('.mermaid-zoom-container')
   );
 
   if (remaining.length > 0) {
